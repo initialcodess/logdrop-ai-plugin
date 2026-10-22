@@ -106,4 +106,4 @@ docs/                         Platform notes and local testing
 
 ## Before publication
 
-Choose an approved license and add it before directory submission; no license has been selected yet. Complete the client checks in the local testing guide. Directory review and approval are separate from hosting this source repository.
+The plugin source is available under the [MIT License](LICENSE). LogDrop service access remains subject to its own terms. See the [Privacy Policy](https://logdrop.io/privacy). Complete the client checks in the local testing guide. Directory review and approval are separate from hosting this source repository.

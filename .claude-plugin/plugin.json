@@ -8,6 +8,8 @@
   },
   "homepage": "https://developer.logdrop.io/docs/panel/mcp",
   "repository": "https://github.com/initialcodess/logdrop-ai-plugin",
+  "license": "MIT",
+  "privacyPolicyUrl": "https://logdrop.io/privacy",
   "keywords": [
     "logdrop",
     "observability",

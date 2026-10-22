@@ -9,7 +9,14 @@
   },
   "homepage": "https://developer.logdrop.io/docs/panel/mcp",
   "repository": "https://github.com/initialcodess/logdrop-ai-plugin",
-  "keywords": ["logdrop", "observability", "mobile", "crashes", "security", "mcp"],
+  "keywords": [
+    "logdrop",
+    "observability",
+    "mobile",
+    "crashes",
+    "security",
+    "mcp"
+  ],
   "extensions": {
     "com.openai": {
       "interface": {
@@ -18,7 +25,10 @@
         "longDescription": "Connect to LogDrop with your account. Investigate crashes, logs, HTTP requests, and security findings, or manage supported project features within the permissions you grant.",
         "developerName": "LogDrop",
         "websiteURL": "https://logdrop.io",
-        "capabilities": ["Read", "Write"],
+        "capabilities": [
+          "Read",
+          "Write"
+        ],
         "defaultPrompt": [
           "Use LogDrop to check my app's health over the last 24 hours.",
           "Use LogDrop to investigate the latest crashes in my project."
@@ -27,6 +37,10 @@
         "composerIcon": "./assets/logo.png",
         "logo": "./assets/logo.png"
       }
+    },
+    "com.anthropic": {
+      "privacyPolicyUrl": "https://logdrop.io/privacy"
     }
-  }
+  },
+  "license": "MIT"
 }

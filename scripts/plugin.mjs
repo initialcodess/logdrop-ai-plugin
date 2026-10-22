@@ -60,7 +60,7 @@ async function checkDocumentation(directory) {
 // The portable manifest and MCP configuration are the only editable definitions.
 // Claude uses the same data, but names the HTTP transport differently.
 function claudeFiles(manifest, mcp) {
-  const { name, version, description, author, homepage, repository, keywords } = manifest;
+  const { name, version, description, author, homepage, repository, license, keywords } = manifest;
   return {
     '.claude-plugin/plugin.json': {
       name,
@@ -69,6 +69,8 @@ function claudeFiles(manifest, mcp) {
       author,
       homepage,
       ...(repository ? { repository } : {}),
+      license,
+      privacyPolicyUrl: manifest.extensions['com.anthropic'].privacyPolicyUrl,
       keywords,
     },
     '.mcp.json': {
@@ -90,6 +92,9 @@ async function check(manifest, mcp, generated) {
   assert.match(manifest.version, /^\d+\.\d+\.\d+$/);
   assert.equal((await load('package.json')).version, manifest.version);
   assert.equal(manifest.author.name, 'LogDrop');
+  assert.equal(manifest.license, 'MIT');
+  assert.equal(generated['.claude-plugin/plugin.json'].privacyPolicyUrl, 'https://logdrop.io/privacy');
+  assert.ok((await readFile(join(root, 'LICENSE'), 'utf8')).startsWith('MIT License'));
   assert.deepEqual(mcp.mcpServers, {
     logdrop: { type: 'streamable-http', url: 'https://mcp.logdrop.io/mcp' },
   });
@@ -132,7 +137,7 @@ async function main() {
     // Refuse an existing package so removed components cannot remain in a release.
     await mkdir(join(root, 'dist'), { recursive: true });
     await mkdir(output);
-    const files = ['plugin.json', 'mcp.json', '.claude-plugin', '.mcp.json', 'assets', 'README.md', 'docs'];
+    const files = ['plugin.json', 'mcp.json', '.claude-plugin', '.mcp.json', 'assets', 'LICENSE', 'README.md', 'docs'];
     try {
       await readdir(join(root, 'skills'));
       files.push('skills');
