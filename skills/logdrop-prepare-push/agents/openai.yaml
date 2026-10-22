@@ -1,0 +1,4 @@
+interface:
+  display_name: "Prepare a LogDrop Push"
+  short_description: "Prepare a campaign form for human sending"
+  default_prompt: "Use $logdrop-prepare-push to prepare the requested push campaign and return its panel review link."

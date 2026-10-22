@@ -1,0 +1,32 @@
+{
+  "$schema": "https://agent-plugins.org/schemas/1.0.0/plugin.schema.json",
+  "name": "logdrop",
+  "version": "0.1.0",
+  "description": "Connect your AI assistant to LogDrop to investigate app health, crashes, logs, HTTP requests, and security findings, and manage supported project features.",
+  "author": {
+    "name": "LogDrop",
+    "url": "https://logdrop.io"
+  },
+  "homepage": "https://developer.logdrop.io/docs/panel/mcp",
+  "repository": "https://github.com/initialcodess/logdrop-ai-plugin",
+  "keywords": ["logdrop", "observability", "mobile", "crashes", "security", "mcp"],
+  "extensions": {
+    "com.openai": {
+      "interface": {
+        "displayName": "LogDrop",
+        "shortDescription": "Investigate app health with LogDrop",
+        "longDescription": "Connect to LogDrop with your account. Investigate crashes, logs, HTTP requests, and security findings, or manage supported project features within the permissions you grant.",
+        "developerName": "LogDrop",
+        "websiteURL": "https://logdrop.io",
+        "capabilities": ["Read", "Write"],
+        "defaultPrompt": [
+          "Use LogDrop to check my app's health over the last 24 hours.",
+          "Use LogDrop to investigate the latest crashes in my project."
+        ],
+        "brandColor": "#2389E8",
+        "composerIcon": "./assets/logo.png",
+        "logo": "./assets/logo.png"
+      }
+    }
+  }
+}

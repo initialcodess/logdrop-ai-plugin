@@ -1,0 +1,4 @@
+interface:
+  display_name: "Plan LogDrop Event Tracking"
+  short_description: "Design useful business events and property schemas"
+  default_prompt: "Use $logdrop-plan-event-tracking to audit existing events and design a tracking plan for this business goal."

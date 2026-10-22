@@ -1,0 +1,4 @@
+interface:
+  display_name: "Investigate a LogDrop Anomaly"
+  short_description: "Test anomaly causes against actual telemetry"
+  default_prompt: "Use $logdrop-investigate-anomaly to check this anomaly assessment and identify an evidence-backed remedy."

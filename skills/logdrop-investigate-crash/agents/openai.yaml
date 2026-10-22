@@ -1,0 +1,4 @@
+interface:
+  display_name: "Investigate a LogDrop Crash"
+  short_description: "Trace a crash into logs and matching source"
+  default_prompt: "Use $logdrop-investigate-crash to investigate this crash and fix the evidenced cause if source is available."

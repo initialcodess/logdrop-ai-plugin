@@ -1,0 +1,4 @@
+interface:
+  display_name: "Review LogDrop Campaign Performance"
+  short_description: "Evaluate push engagement and journey run outcomes"
+  default_prompt: "Use $logdrop-review-campaign-performance to assess the selected campaigns and recommend evidence-backed improvements."

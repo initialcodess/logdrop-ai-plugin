@@ -1,0 +1,4 @@
+interface:
+  display_name: "Manage LogDrop Alerts"
+  short_description: "Build, tune, and troubleshoot alert rules safely"
+  default_prompt: "Use $logdrop-manage-alerts to inspect the current rules and configure the requested alert behavior."

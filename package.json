@@ -1,0 +1,15 @@
+{
+  "name": "logdrop-ai-plugin",
+  "version": "0.1.0",
+  "private": true,
+  "description": "Local authoring tools for the LogDrop AI plugin.",
+  "type": "module",
+  "engines": {
+    "node": ">=20"
+  },
+  "scripts": {
+    "sync": "node scripts/plugin.mjs sync",
+    "check": "node scripts/plugin.mjs check",
+    "package": "node scripts/plugin.mjs package"
+  }
+}

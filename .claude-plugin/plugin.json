@@ -1,0 +1,19 @@
+{
+  "name": "logdrop",
+  "version": "0.1.0",
+  "description": "Connect your AI assistant to LogDrop to investigate app health, crashes, logs, HTTP requests, and security findings, and manage supported project features.",
+  "author": {
+    "name": "LogDrop",
+    "url": "https://logdrop.io"
+  },
+  "homepage": "https://developer.logdrop.io/docs/panel/mcp",
+  "repository": "https://github.com/initialcodess/logdrop-ai-plugin",
+  "keywords": [
+    "logdrop",
+    "observability",
+    "mobile",
+    "crashes",
+    "security",
+    "mcp"
+  ]
+}

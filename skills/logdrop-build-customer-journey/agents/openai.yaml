@@ -1,0 +1,4 @@
+interface:
+  display_name: "Build a LogDrop Customer Journey"
+  short_description: "Design and validate a journey before publication"
+  default_prompt: "Use $logdrop-build-customer-journey to draft the requested automation and prepare it for panel review."

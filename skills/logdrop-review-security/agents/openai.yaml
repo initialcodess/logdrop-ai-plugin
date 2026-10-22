@@ -1,0 +1,4 @@
+interface:
+  display_name: "Review LogDrop Security"
+  short_description: "Assess static findings and runtime risk evidence"
+  default_prompt: "Use $logdrop-review-security to review application risks and explain findings, coverage, and next steps."

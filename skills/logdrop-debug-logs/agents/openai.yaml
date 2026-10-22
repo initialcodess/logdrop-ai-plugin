@@ -1,0 +1,4 @@
+interface:
+  display_name: "Debug with LogDrop Logs"
+  short_description: "Explain app and HTTP failures from evidence"
+  default_prompt: "Use $logdrop-debug-logs to investigate this application failure using relevant logs and request context."

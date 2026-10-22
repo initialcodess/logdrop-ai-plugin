@@ -1,0 +1,4 @@
+interface:
+  display_name: "Analyze a LogDrop Funnel"
+  short_description: "Measure conversion and explain funnel drop-off"
+  default_prompt: "Use $logdrop-analyze-funnel to investigate conversion through the requested business flow."

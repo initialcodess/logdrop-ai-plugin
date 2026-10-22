@@ -1,0 +1,4 @@
+interface:
+  display_name: "Review LogDrop App Health"
+  short_description: "Prioritize app health and release regressions"
+  default_prompt: "Use $logdrop-review-app-health to assess the selected project and prioritize its most important problems."

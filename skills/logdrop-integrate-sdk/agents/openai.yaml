@@ -1,0 +1,4 @@
+interface:
+  display_name: "Integrate LogDrop SDK"
+  short_description: "Install, upgrade, and verify SDK integration"
+  default_prompt: "Use $logdrop-integrate-sdk to integrate LogDrop into this application and verify the requested platforms."
