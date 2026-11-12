@@ -8,3 +8,8 @@ dist/
 *.key
 *.jwk
 *.log
+
+# The logo is kept out of Git on purpose. See "Why the logo is not in Git" in README.md.
+# Keep it at .brand/logo.png locally; `npm run package` copies it into the package.
+.brand/
+/assets/

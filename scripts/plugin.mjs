@@ -1,11 +1,34 @@
 import assert from 'node:assert/strict';
-import { cp, mkdir, readFile, readdir, writeFile } from 'node:fs/promises';
+import { cp, mkdir, readFile, readdir, stat, writeFile } from 'node:fs/promises';
 import { dirname, join, relative, resolve, sep } from 'node:path';
 import { fileURLToPath } from 'node:url';
 
 const root = fileURLToPath(new URL('../', import.meta.url));
 const json = (value) => `${JSON.stringify(value, null, 2)}\n`;
 const load = async (path) => JSON.parse(await readFile(join(root, path), 'utf8'));
+
+// Why the logo is not in Git: the Claude plugin directory scans the tracked branch and cannot
+// inspect image or font files as code. For an organization that is not Verified, any such file
+// stops the version with "Plugin not fully checked" (seen on v0.1.0, 2026-10-22). Codex still
+// needs the logo, so it lives only in the local, Git-ignored `.brand/` folder and `npm run package`
+// copies it to `assets/logo.png` inside the built package. Do not commit it back to the repository;
+// the Claude listing icon is uploaded separately in the directory portal.
+const localLogo = '.brand/logo.png';
+const packagedLogo = './assets/logo.png';
+
+async function checkLogo(required) {
+  let image;
+  try {
+    image = await readFile(join(root, localLogo));
+  } catch (error) {
+    if (error.code !== 'ENOENT') throw error;
+    const message = `${localLogo} is missing. Copy the LogDrop logo (PNG) there before packaging; it is kept out of Git on purpose.`;
+    assert.ok(!required, message);
+    console.warn(`Warning: ${message}`);
+    return;
+  }
+  assert.equal(image.subarray(0, 8).toString('hex'), '89504e470d0a1a0a', `${localLogo} must be a PNG file`);
+}
 
 async function checkMarkdownLinks(path) {
   const body = await readFile(path, 'utf8');
@@ -85,7 +108,7 @@ function claudeFiles(manifest, mcp) {
   };
 }
 
-async function check(manifest, mcp, generated) {
+async function check(manifest, mcp, generated, required = false) {
   assert.equal(manifest.$schema, 'https://agent-plugins.org/schemas/1.0.0/plugin.schema.json');
   assert.equal(mcp.$schema, 'https://agent-plugins.org/schemas/1.0.0/mcp.schema.json');
   assert.equal(manifest.name, 'logdrop');
@@ -102,11 +125,11 @@ async function check(manifest, mcp, generated) {
     assert.equal(await readFile(join(root, path), 'utf8'), json(expected), `${path}: run npm run sync`);
   }
   const ui = manifest.extensions['com.openai'].interface;
-  for (const asset of [ui.logo, ui.composerIcon]) {
-    assert.equal(asset, './assets/logo.png');
-    const image = await readFile(join(root, asset));
-    assert.equal(image.subarray(0, 8).toString('hex'), '89504e470d0a1a0a');
-  }
+  for (const asset of [ui.logo, ui.composerIcon]) assert.equal(asset, packagedLogo);
+  // The logo must not return to the repository; see the note above `localLogo`.
+  await assert.rejects(stat(join(root, 'assets')), { code: 'ENOENT' },
+    `Do not add assets/ to the repository. Keep the logo at ${localLogo}; see README.md "Why the logo is not in Git".`);
+  await checkLogo(required);
   // A package must never carry a static credential or a tool implementation.
   for (const config of [manifest, mcp, ...Object.values(generated)]) {
     assert.doesNotMatch(json(config), /Bearer\s|clientSecret|api_key|private_key|localhost|127\.0\.0\.1/);
@@ -130,14 +153,14 @@ async function main() {
     }
     console.log('Updated Claude compatibility files from plugin.json and mcp.json.');
   }
-  await check(manifest, mcp, generated);
+  await check(manifest, mcp, generated, action === 'package');
 
   if (action === 'package') {
     const output = join(root, 'dist', `logdrop-${manifest.version}`);
     // Refuse an existing package so removed components cannot remain in a release.
     await mkdir(join(root, 'dist'), { recursive: true });
     await mkdir(output);
-    const files = ['plugin.json', 'mcp.json', '.claude-plugin', '.mcp.json', 'assets', 'LICENSE', 'README.md', 'docs'];
+    const files = ['plugin.json', 'mcp.json', '.claude-plugin', '.mcp.json', 'LICENSE', 'README.md', 'docs'];
     try {
       await readdir(join(root, 'skills'));
       files.push('skills');
@@ -145,6 +168,8 @@ async function main() {
       if (error.code !== 'ENOENT') throw error;
     }
     for (const path of files) await cp(join(root, path), join(output, path), { recursive: true });
+    await mkdir(join(output, 'assets'));
+    await cp(join(root, localLogo), join(output, packagedLogo));
     console.log(`Package ready: ${output}`);
   }
 }

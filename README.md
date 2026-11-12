@@ -86,6 +86,16 @@ npm run package
 
 The output is `dist/logdrop-0.1.0/`. Packaging refuses to overwrite an existing output folder. Remove that generated folder before rebuilding the same version.
 
+Packaging needs the LogDrop logo at `.brand/logo.png`. This folder is ignored by Git, so a fresh clone does not have it. Copy the logo PNG there before running `npm run package`.
+
+### Why the logo is not in Git
+
+Do not commit the logo (or any other image or font file) back to this repository, and do not add an `assets/` folder at the root. `npm run check` fails if one exists.
+
+The Claude plugin directory scans the branch it tracks. It cannot inspect image or font files as code. For an organization that is not Verified, any such file stops the version with "Plugin not fully checked". This is what happened to v0.1.0 on 2026-10-22. Codex still shows the logo: `plugin.json` points to `./assets/logo.png`, and `npm run package` copies `.brand/logo.png` to that path inside the built package. The icon for the Claude listing is uploaded separately in the directory portal.
+
+If LogDrop's organization later becomes Verified in the Claude directory, this rule can be reconsidered.
+
 - [Local installation steps](docs/local-testing.md)
 - [Platform differences and official sources](docs/platforms.md)
 - [Maintaining shared skills](docs/adding-skills.md)
@@ -98,7 +108,7 @@ plugin.json                   Shared identity and Codex presentation
 mcp.json                      Portable connection configuration
 .claude-plugin/plugin.json    Generated Claude metadata
 .mcp.json                     Generated Claude HTTP connection
-assets/logo.png               LogDrop logo
+.brand/logo.png               LogDrop logo, local only and not in Git (see below)
 skills/                       Shared SKILL.md workflows and focused references
 scripts/plugin.mjs            Sync, configuration checks, packaging
 docs/                         Platform notes and local testing
