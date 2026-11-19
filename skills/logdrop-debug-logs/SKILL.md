@@ -31,6 +31,6 @@ Check the relevant dates, capture settings, upload parts, and retention/deletion
 
 For full/oversized content, use `get_log_download_url` only when authorized file processing is available. Follow its returned `reading_guide`: bounded streaming/decompression, narrow extraction, and limited output. Do not paste the full expanded file or persist/share signed URLs. If local processing is unavailable, report the limit.
 
-If new logs are required, `request_device_logs` only prepares a panel link. Return it; the human sends the request. Stop pending their action instead of polling or automating Send.
+If new logs are required, `prepare_device_log_request` only prepares a panel link. Return it; the human sends the request. Stop pending their action instead of polling or automating Send.
 
 Return a concise timeline, exact evidence IDs, observed versus hypothesized cause, relevant source fix/check if requested, and the remaining evidence gap.
