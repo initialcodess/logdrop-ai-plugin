@@ -105,6 +105,30 @@ async function checkDirectoryPolicy() {
   }
 }
 
+// OpenAI plugin directory: fields and limits required for a public MCP submission
+// (https://developers.openai.com/plugins/deploy/submission#manifest-fields).
+function checkOpenAiSubmission(manifest) {
+  const openai = manifest.extensions['com.openai'];
+  const ui = openai.interface;
+  const limits = { displayName: 30, shortDescription: 30, longDescription: 4000, developerName: 80, category: 200 };
+  for (const [field, max] of Object.entries(limits)) {
+    assert.ok(typeof ui[field] === 'string' && ui[field].trim() && ui[field].length <= max, `OpenAI interface.${field}: required, at most ${max} characters`);
+  }
+  for (const field of ['websiteURL', 'supportURL', 'privacyPolicyURL', 'termsOfServiceURL']) {
+    assert.match(ui[field] ?? '', /^https:\/\/[^@\s]+$/, `OpenAI interface.${field}: required HTTPS URL for MCP review`);
+  }
+  const prompts = [ui.defaultPrompt ?? []].flat();
+  assert.ok(prompts.length <= 3 && prompts.every((text) => text.length <= 128) && new Set(prompts).size === prompts.length,
+    'OpenAI interface.defaultPrompt: at most three unique prompts of 128 characters');
+  const cases = openai.review?.test_cases;
+  assert.equal(cases?.positive?.length, 5, 'OpenAI review: exactly five positive test cases');
+  assert.equal(cases?.negative?.length, 3, 'OpenAI review: exactly three negative test cases');
+  for (const item of cases.positive) assert.ok(item.description && item.prompt && item.tools_triggered && item.expected_behavior, `OpenAI positive case incomplete: ${item.description}`);
+  for (const item of cases.negative) assert.ok(item.description && item.prompt, `OpenAI negative case incomplete: ${item.description}`);
+  assert.ok(!('test_credentials' in openai.review) && !('reviewer_instructions' in openai.review), 'OpenAI review: credentials belong in the dashboard, not the package');
+  if (!openai.review.demo_recording_url) console.warn('Warning: OpenAI review.demo_recording_url is not set; MCP review needs a video walkthrough (it can also be added in the dashboard).');
+}
+
 async function check(manifest, mcp, generated) {
   assert.equal(manifest.$schema, 'https://agent-plugins.org/schemas/1.0.0/plugin.schema.json');
   assert.equal(mcp.$schema, 'https://agent-plugins.org/schemas/1.0.0/mcp.schema.json');
@@ -132,6 +156,7 @@ async function check(manifest, mcp, generated) {
       `${asset}: the Claude icon must be a square PNG of 512-2048 px under 2 MB`);
   }
   await checkDirectoryPolicy();
+  checkOpenAiSubmission(manifest);
   // A package must never carry a static credential or a tool implementation.
   for (const config of [manifest, mcp, ...Object.values(generated)]) {
     assert.doesNotMatch(json(config), /Bearer\s|clientSecret|api_key|private_key|localhost|127\.0\.0\.1/);
@@ -170,7 +195,8 @@ async function main() {
       if (error.code !== 'ENOENT') throw error;
     }
     for (const path of files) await cp(join(root, path), join(output, path), { recursive: true });
-    console.log(`Package ready: ${output}`);
+    execFileSync('zip', ['-qr', `${output}.zip`, '.'], { cwd: output });
+    console.log(`Package ready: ${output} and ${output}.zip (upload the ZIP to OpenAI)`);
   }
 }
 
