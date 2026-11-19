@@ -2,7 +2,7 @@
 
 No client settings are changed by the build scripts. The steps below are manual and have not been run as part of creating this draft.
 
-Run `npm run check` and `npm run package` from the project folder first. In these examples, replace `/absolute/path/to/LogDrop-AI-Plugin` with your checkout location. Avoid installing a second LogDrop connection if you already have one enabled; choose which connection to use for the test.
+Run `npm --prefix .tooling run check` and `npm --prefix .tooling run package` from the project folder first (see "Review and local testing" in the [README](../README.md) for the `.tooling/` checkout). In these examples, replace `/absolute/path/to/LogDrop-AI-Plugin` with your checkout location. Avoid installing a second LogDrop connection if you already have one enabled; choose which connection to use for the test.
 
 ## Claude Code
 

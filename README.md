@@ -65,36 +65,36 @@ The skills distinguish diagnosis from a requested change, drafts from publicatio
 
 ## Review and local testing
 
-Use Node.js 20 or newer. There are no npm dependencies.
+Use Node.js 20 or newer. There are no npm dependencies. The maintainer scripts are on the separate `tooling` branch (see below). Check it out once at `.tooling/`:
 
 ```sh
-npm run check
+git fetch origin tooling
+git worktree add .tooling tooling
+npm --prefix .tooling run check
 ```
 
 Edit `plugin.json` for shared metadata or `mcp.json` for the connection. Then update the Claude files:
 
 ```sh
-npm run sync
-npm run check
+npm --prefix .tooling run sync
+npm --prefix .tooling run check
 ```
 
 Build a clean, allowlisted plugin folder:
 
 ```sh
-npm run package
+npm --prefix .tooling run package
 ```
 
 The output is `dist/logdrop-0.1.0/`. Packaging refuses to overwrite an existing output folder. Remove that generated folder before rebuilding the same version.
 
-Packaging needs the LogDrop logo at `.brand/logo.png`. This folder is ignored by Git, so a fresh clone does not have it. Copy the logo PNG there before running `npm run package`.
+### Maintainer tooling
 
-### Why the logo is not in Git
+Do not add scripts, programs or a `package.json` to `main`, and do not merge the `tooling` branch into it. The Claude plugin directory scans `main`. For an organization that is not Verified, it refuses the version if `main` holds any file except Markdown, text, JSON, YAML, PNG/JPEG/GIF/WebP/ICO images, `LICENSE` and `.gitignore`, or a `package.json` with fields it does not allow (such as `scripts`). This refused v0.1.0 on 2026-11-12. `npm --prefix .tooling run check` fails when `main` breaks these rules.
 
-Do not commit the logo (or any other image or font file) back to this repository, and do not add an `assets/` folder at the root. `npm run check` fails if one exists.
+The logo at `assets/logo.png` is allowed. Codex uses it through `plugin.json`, and Claude uses it as the plugin icon through `icon` in `.claude-plugin/plugin.json`. It must stay a square PNG of 512 to 2048 px, under 2 MB.
 
-The Claude plugin directory scans the branch it tracks. It cannot inspect image or font files as code. For an organization that is not Verified, any such file stops the version with "Plugin not fully checked". This is what happened to v0.1.0 on 2026-10-22. Codex still shows the logo: `plugin.json` points to `./assets/logo.png`, and `npm run package` copies `.brand/logo.png` to that path inside the built package. The icon for the Claude listing is uploaded separately in the directory portal.
-
-If LogDrop's organization later becomes Verified in the Claude directory, this rule can be reconsidered.
+If LogDrop's organization later becomes Verified in the Claude directory, these rules can be reconsidered.
 
 - [Local installation steps](docs/local-testing.md)
 - [Platform differences and official sources](docs/platforms.md)
@@ -108,9 +108,9 @@ plugin.json                   Shared identity and Codex presentation
 mcp.json                      Portable connection configuration
 .claude-plugin/plugin.json    Generated Claude metadata
 .mcp.json                     Generated Claude HTTP connection
-.brand/logo.png               LogDrop logo, local only and not in Git (see below)
+assets/logo.png               LogDrop logo (Codex logo and Claude icon)
 skills/                       Shared SKILL.md workflows and focused references
-scripts/plugin.mjs            Sync, configuration checks, packaging
+.tooling/                     Maintainer scripts, from the tooling branch; not in main
 docs/                         Platform notes and local testing
 ```
 

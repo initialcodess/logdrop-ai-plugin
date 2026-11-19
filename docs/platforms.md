@@ -6,11 +6,11 @@ Official documentation checked on 2026-10-22. This is a source-based compatibili
 
 Codex, Cursor, and Copilot document support for Agent Plugins 1.0. Its fixed entry points are `plugin.json`, `mcp.json`, and optional `skills/`. The portable HTTP transport name is `streamable-http`.
 
-We use one portable package with shared skills and a remote MCP connection. There is no need for a separate Cursor manifest or Copilot-specific directory for these components. The logo is added to the built package as `assets/logo.png` but is kept out of Git; see [Why the logo is not in Git](../README.md#why-the-logo-is-not-in-git). How a directory displays it depends on that directory's submission metadata.
+We use one portable package with shared skills and a remote MCP connection. There is no need for a separate Cursor manifest or Copilot-specific directory for these components. The logo is included as `assets/logo.png`. How a directory displays it depends on that directory's submission metadata.
 
 ## Claude Code
 
-Claude uses `.claude-plugin/plugin.json` and `.mcp.json`. Its HTTP transport name is `http`. `npm run sync` maps the portable metadata and connection into those files. Do not edit the generated files directly.
+Claude uses `.claude-plugin/plugin.json` and `.mcp.json`. Its HTTP transport name is `http`. `npm --prefix .tooling run sync` maps the portable metadata and connection into those files. Do not edit the generated files directly.
 
 The plugin does not install a Claude web connector. Claude web and organization distribution have their own setup and policy requirements.
 
@@ -38,7 +38,7 @@ Sources: [plugin formats](https://docs.github.com/en/copilot/concepts/customizat
 
 ## Validation boundaries
 
-`npm run check` runs offline consistency checks for this package, including generated Claude files, matching versions, the production endpoint, the local logo (and that no `assets/` folder is in the repository), skill entry points, and local Markdown links. It is not a replacement for a client's native validator, behavioral evaluation, or an OAuth test.
+`npm --prefix .tooling run check` runs offline consistency checks for this package, including generated Claude files, matching versions, the production endpoint, the logo, the Claude directory file rules for `main`, skill entry points, and local Markdown links. It is not a replacement for a client's native validator, behavioral evaluation, or an OAuth test.
 
 Portable schema definitions: [plugin schema](https://agent-plugins.org/schemas/1.0.0/plugin.schema.json), [MCP schema](https://agent-plugins.org/schemas/1.0.0/mcp.schema.json).
 
